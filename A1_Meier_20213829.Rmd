@@ -1,0 +1,117 @@
+---
+title: "BIOL432_Assignment1"
+author: "Christina Meier"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Github link: https://github.com/cmeier77/BIOL432_Assignment1 
+
+Summary: 
+This assignment takes limb measurements data to calculate limb volumes, sort and summarize the data, and create descriptive plots. 
+The analysis includes sorting the data, calculating average volumes for each species, counting observations for each combination of species and observer and comparing distributions of volumes by species using boxplots and histograms.
+
+Step 1: Load packages and data
+```{r load-data, message = FALSE}
+library(dplyr) #1.1.4
+library(ggplot2) #3.5.1
+library(tidyr) #1.3.1
+
+measurements_data <- read.csv("measurements1.csv")
+head(measurements_data)
+```
+
+Sort the data by types of species
+Look at the first few rows
+```{r}
+measurements_by_species <- measurements_data %>%
+  arrange(CanineTypes)
+
+measurements_by_species
+```
+Sort by observer, and look at the first few rows
+```{r}
+measurements_by_observer <- measurements_data %>%
+  arrange(Observer)
+
+measurements_by_observer
+
+```
+
+Sort by limb volume, and look at first few rows
+```{r}
+measurements_by_volume <- measurements_data %>%
+  arrange(Volume)
+
+measurements_by_volume
+```
+Create a table showing the average volume for each species & calculate the average volume for each species
+```{r}
+average_volume <- measurements_data %>%
+  group_by(CanineTypes) %>%
+  summarize(Average_Volume = mean(Volume))
+
+average_volume
+```
+Create a table showing the number of observations for each combination of species type and observer.
+```{r}
+observations_count <- measurements_data %>%
+  group_by(CanineTypes, Observer) %>%
+  summarize(Observations = n())
+
+observations_count
+```
+Make a boxplot to compare distributions of volumes between dog types
+```{r}
+ggplot(measurements_data, aes(x = CanineTypes, y = Volume, fill = CanineTypes)) +
+  geom_boxplot(outlier.shape = NA, width = 0.6, size = 1.2) + 
+   scale_x_discrete(labels = c(
+    "CanisFamiliaris" = "Canis Familiaris",
+    "CanisLatrans" = "Canis Latrans",
+    "CanisLupus" = "Canis Lupus",
+    "VulpesLagopus" = "Vulpes Lagopus",
+    "VulpesVulpes" = "Vulpes Vulpes"
+  )) +
+  scale_fill_discrete(labels = c(
+    "CanisFamiliaris" = "Canis Familiaris",
+    "CanisLatrans" = "Canis Latrans",
+    "CanisLupus" = "Canis Lupus",
+    "VulpesLagopus" = "Vulpes Lagopus",
+    "VulpesVulpes" = "Vulpes Vulpes"
+  )) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 8)) +
+  labs(
+    title = "Distribution of Limb Volumes by Canine Type",
+    x = "Canine Type",
+    y = "Limb Volume (cm³)"
+  )
+
+```
+Create a multi-panel plot showing frequency histograms of limb volumes for each canine type
+```{r}
+#facet labels
+species_labels <- c("CanisFamiliaris" = "Canis Familiaris",
+    "CanisLatrans" = "Canis Latrans",
+    "CanisLupus" = "Canis Lupus",
+    "VulpesLagopus" = "Vulpes Lagopus",
+    "VulpesVulpes" = "Vulpes Vulpes")
+
+#Creating the frequency histograms
+ggplot(measurements_by_volume, aes(x = Volume, fill = CanineTypes)) +
+  geom_histogram(binwidth = 50, alpha = 0.7) +
+  facet_wrap(~ CanineTypes, scales = "free_y", labeller = labeller(CanineTypes = species_labels)) +
+  scale_x_continuous("Limb Volume (cm³)", breaks = seq(0,2500, 500)) +
+  scale_fill_discrete(name = "Types of Canine Species",
+      labels = species_labels) +
+  theme_minimal() +
+  labs(title = "Frequency Histograms of Limb Volumes by Species",
+    x = "Limb Volume (cm³)",
+    y = "Frequency")
+
+```
+
