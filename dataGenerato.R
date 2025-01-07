@@ -3,7 +3,9 @@
 #Question 1
 
 #create a list of 5 random species name
-speciesNames <- c("cat", "dog", "rabbit", "fish", "reptile")
+speciesNames <- c("cat", "dog", "rabbit", "fish", "reptile")  
+
+#test
 
 #sample from the speciesNames vector a new vector of 100 random ones
 Species <- sample(speciesNames, 100, replace = TRUE)
