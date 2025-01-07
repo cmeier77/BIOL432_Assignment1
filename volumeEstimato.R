@@ -8,3 +8,5 @@ measurements <- measurements %>%
   select(-X) %>%
   mutate(Volume = pi * (Limb_width / 2)^2 * Limb_length)
 
+write.csv(measurements, "measurements.csv", row.names = FALSE)
+
