@@ -4,6 +4,7 @@ author: "Christina Meier"
 date: "`r Sys.Date()`"
 output: html_document
 ---
+https://github.com/cmeier77/BIOL432_Assignment1
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
