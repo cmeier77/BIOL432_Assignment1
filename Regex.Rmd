@@ -1,0 +1,47 @@
+---
+title: "Assignment 5"
+author: "Christina Meier"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load packages
+```{r}
+library(dplyr)
+
+```
+Input data: measurements csv
+```{r}
+dat <- read.csv("~/BIOL432/BIOL432_Assignment1/measurements1.csv")
+```
+
+
+```{r}
+str(dat)
+```
+
+Question 1
+Shortening genus names
+```{r}
+dat <- dat %>%
+  mutate(Sp = sub("^(\\w)[a-z]+([A-Z].+)$", "\\1. \\L\\2", CanineTypes, perl = TRUE))
+
+```
+
+Question 2: reordering columns
+```{r}
+new_dat <- dat %>%
+  select(Sp, everything(), -CanineTypes)
+```
+
+Question 3: save as a new file called MeasShort.csv
+```{r}
+write.csv(new_dat, "~/BIOL432/BIOL432_A2/MeasShort.csv", row.names = FALSE)
+```
+
+
+
